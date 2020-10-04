@@ -16,7 +16,8 @@ async function getHttpServerStatus(server) {
     const socket = await httpsConnect(server);
     const cert = socket.getPeerCertificate();
     const valid_to = new Date(cert.valid_to);
-    return { server, result: true, valid_to }
+    const issuer = cert.issuer && (cert.issuer.O || cert.issuer.CN);
+    return { server, result: true, valid_to, issuer }
   }
   catch(error) {
     return { server, result: false, error };
@@ -128,7 +129,11 @@ module.exports = async function (context, req) {
         }
 
         if (datediff > 0) {
-          html += `<td>Certificate expires in ${getDateDiffString(datediff)} (${valid_to.toISOString().slice(0,19).replace('T', ' ')})</td>`;
+          html += `<td>Certificate expires in <b>${getDateDiffString(datediff)}</b> (${valid_to.toISOString().slice(0,19).replace('T', ' ')})`;
+          if (server.status.issuer) {
+            html += `, issued by <i>${server.status.issuer}</i>`;
+          }
+          html += '</td>';
         }
         else {
           html += `<td>Certificate expired at ${valid_to.toISOString().slice(0,19).replace('T', ' ')}</td>`;
@@ -136,7 +141,7 @@ module.exports = async function (context, req) {
       }
       else {
         html += `<td>❌</td>`;
-        html += `<td>${server.status && server.status.error}</td>`;
+        html += `<td><font color="red">${server.status && server.status.error}</font></td>`;
       }
       html += '</tr>'
     });
