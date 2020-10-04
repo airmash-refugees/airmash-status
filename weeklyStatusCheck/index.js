@@ -4,7 +4,7 @@ module.exports = async function (context, myTimer) {
 	context.log('Weekly status check function started');
 
   let summaryResult = '✔️';
-	let html = '';
+	let html = '<p>Live status is at <a href="https://status.airmash.online">status.airmash.online</a>.</p>';
 
 	const statuses = await httpsConnectivity.getAllServerStatuses();
 	statuses.forEach(category => {
