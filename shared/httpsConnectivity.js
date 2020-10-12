@@ -17,8 +17,10 @@ const serverCategories = {
     'login.airmash.online',
   ],
   'Game servers': [
-    'eu.airmash.online',
+    'ctf.herrmash.com',
     'dev.airbattle.xyz',
+    'eu.airmash.online',
+    'ffa.herrmash.com',
     'game.airmash.cc',
     'us.airmash.online',
   ],
